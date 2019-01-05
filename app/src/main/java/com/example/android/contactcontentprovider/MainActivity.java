@@ -23,11 +23,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        permissionManager = new PermissionManager() {};
+        permissionManager.checkAndRequestPermissions(this);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        fetchContacts();
     }
-
+    
+     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        int total=0;
+        permissionManager.checkResult(requestCode,permissions,grantResults);
+        ArrayList<String> granted = permissionManager.getStatus().get(0).granted;
+        for(String item:granted){
+            total = total+1;
+        }
+        if(total==2){
+            fetchContacts();
+        }
+    }
+    
     private void fetchContacts(){
 
         contactName = new ArrayList<String>();
